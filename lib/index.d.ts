@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import React, { Component, ReactNode } from 'react';
 import { StyleProps } from 'react-html-classes';
 import Modals from './Modals';
@@ -23,6 +24,7 @@ export interface ModalStyles {
     subButton?: any;
     content?: any;
     closing?: any;
+    opening?: any;
     button?: any;
     buttons?: any;
 }
@@ -43,12 +45,13 @@ export interface ModalProps extends StyleProps<ModalStyles> {
 }
 declare class Modal extends Component {
     props: ModalProps;
+    showTimer: NodeJS.Timeout;
     closing: boolean;
+    opening: boolean;
     opened: boolean;
     get open(): boolean;
     get show(): boolean;
     componentDidMount(): void;
-    componentDidUpdate(): void;
     close(button: string): void;
     onWillClose(button: string): void;
     onClose(button: string): void;

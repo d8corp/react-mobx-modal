@@ -6,7 +6,8 @@ const packageJSON = require('../package')
 
 const deep = []
 
-const releaseDir = __dirname + '/../lib'
+const rootDir = __dirname.replace(/\/bin$/, '')
+const releaseDir = rootDir + '/lib'
 
 start()
 
@@ -17,8 +18,10 @@ async function start () {
   await Promise.all([
     copyLicense(),
     copyPackage(),
-    copyReadme()
+    copyReadme(),
+    copyThemes(),
   ])
+  await convertingSass()
   await publish()
   consoleEnd('deploying')
 }
@@ -38,13 +41,24 @@ async function removeFiles () {
 }
 async function copyReadme () {
   consoleStart('copying readme')
-  await getPromise(resolve => fs.copyFile(__dirname + '/../README.md', releaseDir + '/README.md', 'utf8', resolve))
+  await getPromise(resolve => fs.copyFile(rootDir + '/README.md', releaseDir + '/README.md', 'utf8', resolve))
   consoleEnd('copying readme')
 }
 async function copyLicense () {
   consoleStart('copying license')
-  await getPromise(resolve => fs.copyFile(__dirname + '/../LICENSE', releaseDir + '/LICENSE', 'utf8', resolve))
+  await getPromise(resolve => fs.copyFile(rootDir + '/LICENSE', releaseDir + '/LICENSE', 'utf8', resolve))
   consoleEnd('copying license')
+}
+async function copyThemes () {
+  consoleStart('copying themes')
+  await getPromise(resolve => exec(`mkdir ${releaseDir}/themes`, {}, resolve))
+  await getPromise(resolve => fs.copyFile(rootDir + '/src/themes/default.module.scss', releaseDir + '/themes/default.module.scss', 'utf8', resolve))
+  consoleEnd('copying themes')
+}
+async function convertingSass () {
+  consoleStart('converting Sass')
+  await getPromise(resolve => exec(`sass ${releaseDir}/themes/default.module.scss ${releaseDir}/themes/default.css`, {}, resolve))
+  consoleEnd('converting Sass')
 }
 async function copyPackage () {
   consoleStart('copying package.json')

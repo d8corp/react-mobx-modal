@@ -13,7 +13,19 @@ yarn
 yarn add react-mobx-modal
 ```
 ### Using
-...
+All modals should be placed into `Modals`.
+```typescript jsx
+import Modal, {Modals} from 'react-mobx-modal'
+import theme from 'react-mobx-modal/theme/default.module.scss'
+
+export default () => (
+  <Modals className={theme.modules}>
+    <Modal classNames={theme}>
+      Test modal
+    </Modal>
+  </Modals>
+)
+```
 ## Issues
 If you find a bug, please file an issue on [GitHub](https://github.com/d8corp/react-mobx-modal/issues)  
 [![issues](https://img.shields.io/github/issues-raw/d8corp/react-mobx-modal)](https://github.com/d8corp/react-mobx-modal/issues)  

@@ -1,6 +1,6 @@
 import React, {Component, ReactNode, createRef} from 'react'
 import style, {classes, StyleProps} from 'react-html-classes'
-import {computed, observable} from 'mobx'
+import {action, computed, observable} from 'mobx'
 import {observer} from 'mobx-react'
 import Modals from './Modals'
 
@@ -40,6 +40,7 @@ export interface ModalStyles {
   subButton?: any
   content?: any
   closing?: any
+  opening?: any
   button?: any
   buttons?: any
 }
@@ -52,6 +53,7 @@ const styles: ModalStyles = {
   subButton: '',
   content: '',
   closing: '',
+  opening: '',
   buttons: '',
   button: '',
 }
@@ -76,8 +78,10 @@ export interface ModalProps extends StyleProps<ModalStyles> {
 @style(styles)
 class Modal extends Component {
   props: ModalProps
+  showTimer: NodeJS.Timeout
 
   @observable closing = false
+  @observable opening = false
   @observable opened = false
 
   @computed get open (): boolean {
@@ -85,17 +89,15 @@ class Modal extends Component {
     return typeof open === 'function' ? open() : open
   }
   @computed get show (): boolean {
+    if (!this.open && this.opened) {
+      setTimeout(() => this.close('open'))
+    }
     return this.open || this.opened
   }
 
   componentDidMount (): void {
     if (this.props.close) {
       this.props.close(e => this.close(e))
-    }
-  }
-  componentDidUpdate () {
-    if (!this.open && !this.closing && this.opened) {
-      this.close('open')
     }
   }
 
@@ -108,7 +110,7 @@ class Modal extends Component {
       }
     }
   }
-  onWillClose (button: string) {
+  @action onWillClose (button: string) {
     const {delay} = this.props
     if (delay) {
       this.closing = true
@@ -117,21 +119,29 @@ class Modal extends Component {
       this.onClose(button)
     }
   }
-  onClose (button: string) {
+  @action onClose (button: string) {
     if (this.props.onClose) {
       this.props.onClose(button)
     }
-    this.opened = false
     this.closing = false
-    displayed--
-    if (!displayed) {
-      document.body.style.overflow = ''
+    if (!this.open) {
+      this.opened = false
+      displayed--
+      if (!displayed) {
+        document.body.style.overflow = ''
+      }
     }
   }
-  onShow () {
+  @action onShow () {
+    const {delay, onShow} = this.props
     this.opened = true
-    if (this.props.onShow) {
-      this.props.onShow()
+    if (delay) {
+      clearTimeout(this.showTimer)
+      this.opening = true
+      this.showTimer = setTimeout(() => this.opening = false, delay)
+    }
+    if (onShow) {
+      onShow()
     }
     if (!displayed) {
       document.body.style.overflow = 'hidden'
@@ -145,7 +155,8 @@ class Modal extends Component {
       <div className={styles.buttons}>
         {buttons.map(button => (
           <button
-            className={classes(styles.button, styles[`button_${button}`])}
+            data-button={button}
+            className={styles.button}
             key={button}
             onClick={() => this.close(button)}>
             {(buttonsOverride && buttonsOverride[button]) || button}
@@ -168,7 +179,8 @@ class Modal extends Component {
       <div className={styles.subButtons}>
         {subButtons.map(button => (
           <button
-            className={classes(styles.subButton, styles[`subButton_${button}`])}
+            data-button={button}
+            className={styles.subButton}
             key={button}
             onClick={() => this.close(button)}>
             {(buttonsOverride && buttonsOverride[button]) || button}
@@ -203,7 +215,7 @@ class Modal extends Component {
   render () {
     return this.show ? (
       <Popup
-        className={classes(styles.root, this.closing && styles.closing)}
+        className={classes(styles.root, this.opening && styles.opening, this.closing && styles.closing)}
         onShow={() => this.onShow()}
         onClose={result => this.close(result)}>
         {this.header}
