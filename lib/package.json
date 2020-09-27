@@ -1,0 +1,31 @@
+{
+  "name": "react-mobx-modal",
+  "version": "1.0.0-alpha",
+  "description": "Popups with React and MobX",
+  "main": "index.js",
+  "module": "index.es6.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/d8corp/react-mobx-modal.git"
+  },
+  "keywords": [
+    "modal",
+    "popup",
+    "react",
+    "mobx",
+    "front-end"
+  ],
+  "author": "Mikhail Lysikov <d8corp@mail.ru>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/d8corp/react-mobx-modal/issues"
+  },
+  "homepage": "https://github.com/d8corp/react-mobx-modal",
+  "dependencies": {
+    "mobx": ">=3",
+    "mobx-react": ">=3",
+    "react": ">=16.3",
+    "react-html-classes": ">=1",
+    "tslib": ">=2"
+  }
+}
