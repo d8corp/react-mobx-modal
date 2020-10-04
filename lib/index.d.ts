@@ -52,6 +52,7 @@ declare class Modal extends Component {
     get open(): boolean;
     get show(): boolean;
     componentDidMount(): void;
+    componentWillUnmount(): void;
     close(button: string): void;
     onWillClose(button: string): void;
     onClose(button: string): void;

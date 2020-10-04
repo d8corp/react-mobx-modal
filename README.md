@@ -20,7 +20,7 @@ import theme from 'react-mobx-modal/theme/default.module.scss'
 
 export default () => (
   <Modals className={theme.modules}>
-    <Modal classNames={theme}>
+    <Modal delay={300} classNames={theme}>
       Test modal
     </Modal>
   </Modals>

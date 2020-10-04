@@ -100,6 +100,14 @@ class Modal extends Component {
       this.props.close(e => this.close(e))
     }
   }
+  componentWillUnmount () {
+    if (this.open) {
+      displayed--
+      if (!displayed) {
+        document.body.style.overflow = ''
+      }
+    }
+  }
 
   close (button: string) {
     if (!this.closing && this.opened) {

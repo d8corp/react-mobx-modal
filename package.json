@@ -1,6 +1,6 @@
 {
   "name": "react-mobx-modal",
-  "version": "1.0.0-beta",
+  "version": "1.0.0-beta1",
   "description": "Popups with React and MobX",
   "main": "index.js",
   "module": "index.es6.js",
