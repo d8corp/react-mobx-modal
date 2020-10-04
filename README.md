@@ -19,7 +19,7 @@ import Modal, {Modals} from 'react-mobx-modal'
 import theme from 'react-mobx-modal/theme/default.module.scss'
 
 export default () => (
-  <Modals className={theme.modules}>
+  <Modals className={theme.modals}>
     <Modal classNames={theme}>
       Test modal
     </Modal>
